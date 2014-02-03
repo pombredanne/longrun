@@ -1,58 +1,23 @@
 <html>
+<head>
+  <meta charset="utf-8">
+  <title>Mocha Tests</title>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mocha/1.13.0/mocha.min.css"/>
+</head>
+<body>
+<div id="mocha"></div>
 <script language=JavaScript src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script language=JavaScript src="expect.js"></script>
+<script language=JavaScript src="//cdnjs.cloudflare.com/ajax/libs/mocha/1.13.0/mocha.min.js"></script>
 <script language=JavaScript src="should.min.js"></script>
 <script language=JavaScript src="../longrun.js"></script>
-<script language=JavaScript src=basic.js></script>
-<script language=JavaScript>
-
-longrun.should.be.ok;
-
-// longrun.register
-longrun.register.should.be.ok;
-longrun.register("test", "succ", "fail", "poll");
-longrun.register("again", "ok", "bad", "poke");
-longrun._names.should.eql(["test", "again"]);
-longrun._success_functions.should.eql({"test": "succ", "again": "ok"});
-longrun._failure_functions.should.eql({"test": "fail", "again": "bad"});
-longrun._poll_functions.should.eql({"again": "poke", "test": "poll"});
-
-// longrun._nuke_state
-longrun._nuke_state();
-longrun.register.should.be.ok;
-longrun._names.should.be.empty;
-longrun._success_functions.should.be.empty;
-longrun._failure_functions.should.be.empty;
-longrun._poll_functions.should.be.empty;
-
-// longrun.get_state
-longrun._invoke = function (commands) {
-    return JSON.stringify({"status": commands[1], "msg": commands[1]})
-    // override _invoke for testing
-}
-
-never_run = function(msg) {
-    console.log("never_run: "+msg)
-    never_run.should.not.be.ok;  // you should never run this function
-}
-
-var collect_done = []
-
-done = function(msg) {
-    collect_done.push(msg)
-}
-
-fail = done;
-poll = done;
-die = done;
-
-longrun.register('success', done, never_run, never_run);
-longrun.register('failure', never_run, fail, never_run);
-longrun.register('running', never_run, never_run, poll);
-longrun.register('killed', never_run, die, never_run);
-
-longrun.get_state()
-collect_done.should.be.eql(['success', 'failure', 'running', 'killed'])
-
+<script>mocha.setup('bdd')</script>
+<script language=JavaScript src=test.basic.js></script>
+<script>
+  mocha.checkLeaks();
+  mocha.globals(['jQuery']);
+  mocha.run();
 </script>
+</body>
 </html>
 
