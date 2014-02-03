@@ -16,7 +16,7 @@ longrun.register = function(name, success, failure, poll) {
     longrun._names.push(name)
 };
 
-// longrun._invoke = function () {}
+longrun._invoke = function () {window.alert("nope nope nope _invoke")}
 
 longrun.get_state = function() {
     for (var i=0; i<longrun._names.length; i++) {

@@ -30,8 +30,9 @@ describe("Longrun", function(){
   })
 
   describe("get_state", function(){
-    it("correctly invokes commands and gets output", function () {
-
+    it("correctly invokes commands and gets output", sinon.test(function () {
+      var stub_invoke = function(commands){return JSON.stringify({"status": commands[1], "msg": commands[1]})}
+      this.stub(longrun, "_invoke", stub_invoke)
       var never_run = function(msg) {
 	console.log("never_run: "+msg)
 	never_run.should.not.be.ok;  // you should never run this function
@@ -59,6 +60,7 @@ describe("Longrun", function(){
 
       longrun.get_state()
       collect_done.should.be.eql(['success', 'failure', 'running', 'killed'])
-    })
+    }))
   })
+
 })
