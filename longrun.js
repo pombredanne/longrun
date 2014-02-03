@@ -18,22 +18,26 @@ longrun.register = function(name, success, failure, poll) {
 
 longrun._invoke = function () {window.alert("nope nope nope _invoke")}
 
+longrun.get_one_state = function(name) {
+  var raw_state = longrun._invoke(["~/bin/longrun/state", name]);
+  // TODO: make the above async, but keep below not async.
+  var state = $.parseJSON(raw_state);
+  if (state['status'] === 'success') {
+      longrun._success_functions[name](state['msg'])
+  } else if (state['status'] === 'failure') {
+      longrun._failure_functions[name](state['msg'])
+  } else if (state['status'] === 'running') {
+      longrun._poll_functions[name](state['msg'])
+  } else if (state['status'] === 'killed') {
+      longrun._failure_functions[name](state['msg'])
+  } else {
+      console.log("Didn't know what to do with status "+status)
+  }
+}
+
 longrun.get_state = function() {
     for (var i=0; i<longrun._names.length; i++) {
         var name = longrun._names[i]
-        var raw_state = longrun._invoke(["~/bin/longrun/state", name]);
-        // TODO: make the above async, but keep below not async.
-        var state = $.parseJSON(raw_state);
-        if (state['status'] === 'success') {
-            longrun._success_functions[name](state['msg'])
-        } else if (state['status'] === 'failure') {
-            longrun._failure_functions[name](state['msg'])
-        } else if (state['status'] === 'running') {
-            longrun._poll_functions[name](state['msg'])
-        } else if (state['status'] === 'killed') {
-            longrun._failure_functions[name](state['msg'])
-        } else {
-            console.log("Didn't know what to do with status "+status)
-        }
+        longrun.get_one_state(name)
     }
 }
