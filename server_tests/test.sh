@@ -9,27 +9,28 @@ mkdir ~/.longrun
 ~/longrun/bin/launcher KILLED __NOPE__KILLED sleep 10 &
 pkill -9 -f __NOPE__KILLED
 
-if [ "$(~/longrun/bin/longrun.state SUCCESS)" != "success" ]
+if [[ $(~/longrun/bin/longrun.state SUCCESS) != *success* ]]
 then
   echo success error
 fi
 
-if [ "$(~/longrun/bin/longrun.state FAILED)" != "failure" ]
+if [[ $(~/longrun/bin/longrun.state FAILED) != *failure* ]]
 then
   echo fail error
 fi
 
-if [ "$(~/longrun/bin/longrun.state RUNNING)" != "running" ]
+if [[ $(~/longrun/bin/longrun.state RUNNING) != *running* ]]
 then
   echo run error
 fi
 
-if [ "$(~/longrun/bin/longrun.state KILLED)" != "killed" ]
+if [[ $(~/longrun/bin/longrun.state KILLED) != *killed* ]]
 then
   echo kill error
 fi
 
-if [ "$(~/longrun/bin/longrun.state NOTRUN)" != "not run" ]
+
+if [[ $(~/longrun/bin/longrun.state NOTRUN) != *not\ run* ]]
 then
   echo notrun error
 fi

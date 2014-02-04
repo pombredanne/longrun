@@ -16,12 +16,26 @@ LongRun = function() {
     this._names.push(name)
   };
 
-  var _invoke = function () {window.alert("nope nope nope _invoke")}
+  var _exec_success = function(response) {
+    var json_response = $.parseJSON(response)
+    if (json_response['status'] != 'started') {
+      window.alert("Unable to start, already started?\n"+json_response)
+    }
+  }
+
+  var _exec_fail = function(response) {
+    window.alert("Didn't get response from server :(")
+  }
+ 
+  var _invoke = function (command) {
+    text_command = command.join('')
+    scraperwiki.exec(text_command, _exec_success, _exec_fail)
+  }
 
   var get_one_state = function(name) {
     console.log("get_one "+name)
     console.log("get_one_this"+this)
-    var raw_state = this._invoke(["~/bin/longrun.state", name]);
+    var raw_state = this._invoke(["~/bin/longrun.state ", name]);
     // TODO: make the above async, but keep below not async.
     var state = $.parseJSON(raw_state);
     if (state['status'] === 'success') {

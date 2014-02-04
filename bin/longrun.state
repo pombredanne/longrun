@@ -24,6 +24,6 @@ else
   fi
 fi
 
-echo -n $STATUS
+echo -n "{\"status\": \"$STATUS\", \"msg\": \"$MSG\"}"
 # echo $MSG
 # pass STATUS and MSG to python to jsonify
