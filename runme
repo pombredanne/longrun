@@ -1,0 +1,4 @@
+#!/bin/bash -e
+mkdir -p ~/bin
+ln -s ~/longrun/bin/longrun.state ~/bin/longrun.state || true
+ln -s ~/longrun/bin/launcher ~/bin/launcher || true

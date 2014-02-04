@@ -1,0 +1,31 @@
+#!/bin/bash
+# JSON output of the status of a named process
+# {"status": "success"|"failure"|"running"|"killed",
+#  "msg": "arbitary text string"}
+
+mkdir -p ~/.longrun
+NAME=$1
+STATE=$(cat ~/.longrun/$NAME.state 2> /dev/null || echo 'not run')
+MARKER=__NOPE__$NAME
+STATUS=xxx
+MSG=xxx
+PROCESS=$(pgrep -fn "$MARKER")
+if [ "$PROCESS" != "" ]
+then
+  STATUS="running"
+  MSG="run"
+else
+  STATE=$(cat ~/.longrun/$NAME.state 2> /dev/null || echo 'not run')
+  if [ "$STATE" = "running" ]
+  then
+    STATUS="killed"
+    MSG="unexpectedly died"
+  else
+    STATUS=$STATE
+    MSG=$(tail -n 30 ~/.longrun/name.log 2> /dev/null)
+  fi
+fi
+
+echo -n $STATUS
+# echo $MSG
+# pass STATUS and MSG to python to jsonify

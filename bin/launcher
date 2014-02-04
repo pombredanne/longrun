@@ -1,0 +1,13 @@
+#!/bin/bash
+NAME=$1
+shift  # ignore first two arguments
+shift
+# TODO bail if state is running!
+echo -n 'running' > ~/.longrun/$NAME.state
+$@ > ~/.longrun/$NAME.log
+if [ "$?" == "0" ]
+  then
+     echo -n 'success' > ~/.longrun/$NAME.state
+  else
+     echo -n 'failure' > ~/.longrun/$NAME.state
+fi
