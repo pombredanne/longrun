@@ -5,6 +5,10 @@ LongRun = function() {
   this._poll_functions = {};
   this._names = [];
 
+  //var _default_fail = function(name, msg) {
+  //     window.alert(name+" failed:\n"+msg)
+  //}
+
   var register = function(name, success, failure, poll) {
     this._success_functions[name] = success;
     this._failure_functions[name] = failure;
@@ -25,8 +29,8 @@ LongRun = function() {
     } else if (state['status'] === 'failure') {
 	this._failure_functions[name](name, state['msg'])
     } else if (state['status'] === 'running') {
-	//this._poll_functions[name](name, state['msg'])
-        this._poll(name)
+	this._poll_functions[name](name, state['msg'])
+        //this._poll(name)
     } else if (state['status'] === 'killed') {
 	this._failure_functions[name](name, state['msg'])
     } else {
@@ -45,7 +49,7 @@ LongRun = function() {
     console.log("_poll:"+name+" "+msg)
     console.log("_poll this"+this)
     var that = this
-    window.setTimeout(function(name){that.get_one_state(name)}, 100, name)
+    window.setTimeout(function(name){that.get_one_state(name)}, 10000, name)
   }
 
   this.register = register

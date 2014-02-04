@@ -1,6 +1,6 @@
 var never_run = function(msg) {
   console.log("never_run: "+msg)
-  never_run.should.not.be.ok;  // you should never run this function
+  "running never_run".should.not.be.ok;  // you should never run this function
 }
 
 describe("Longrun", function(){
@@ -17,6 +17,15 @@ describe("Longrun", function(){
       longrun._failure_functions.should.eql({"test": "fail", "again": "bad"});
       longrun._poll_functions.should.eql({"again": "poke", "test": "poll"});
     })
+
+//    it("takes reasonable defaults", function () {
+//      var longrun = new LongRun()
+//      longrun.register("test", "succ");
+//      longrun._names.should.eql(["test"]);
+//      longrun._success_functions.should.eql({"test": "succ"});
+//      longrun._failure_functions.should.eql({"test": longrun._default_fail});
+//      longrun._poll_functions.should.eql({"test": longrun._poll});
+//    })
   })
 
   it("is classlike", function () {
@@ -58,7 +67,7 @@ describe("Longrun", function(){
 
       longrun.get_state()
       //collect_done.should.be.eql(['success', 'failure', 'running', 'killed'])
-      collect_done.should.be.eql(['success', 'failure', 'killed'])
+      collect_done.should.be.eql(['success', 'failure', 'running', 'killed'])
     }))
   })
 
@@ -68,29 +77,28 @@ describe("Longrun", function(){
       var i = 0
       var stub_invoke = function(msg){
         i++;
-        console.log("Stub_invoke "+i)
+        console.log("Stub_invoke "+i+msg)
         if (i>4) {
-            this.should.not.be.ok
-        } else if (i==4) {
+            "running many times".should.not.be.ok
+        } else if (i===4) {
             return '{"status":"success", "msg":"ok"}'
         } else {
             return '{"status":"running", "msg":"chug"}'
         }
       }
       longrun._invoke = stub_invoke;
-      var collect_done = []
-      var done = function(name, msg) {
-          name.should.be.eql("attempt")
-          msg.should.be.eql("ok")
-          window.alert("ok")
-      }
-
-      var fail = done;
-      var success = done;
-      
-      longrun.register("attempt", success, fail, fail)
-      longrun.get_state()
-      
+      var bond = sinon.spy();
+      var fail = function() {
+         "calling fail".should.not.be.ok;
+      }   
+      this.clock = sinon.useFakeTimers();
+ 
+      var poller = function(name, msg){longrun._poll(name, msg)}
+      longrun.register("attempt", bond, fail, poller);
+      longrun.get_state();
+      this.clock.tick(50000);
+      bond.calledOnce.should.be.ok;
+      bond.calledWith("attempt", "ok").should.be.ok;
     })
   })
 })
