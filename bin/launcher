@@ -4,6 +4,7 @@ shift  # ignore first two arguments
 shift
 # TODO bail if state is running!
 echo -n 'running' > ~/.longrun/$NAME.state
+echo $@ > ~/.longrun/$NAME.args
 $@ > ~/.longrun/$NAME.log
 if [ "$?" == "0" ]
   then

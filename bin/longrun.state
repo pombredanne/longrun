@@ -7,8 +7,6 @@ mkdir -p ~/.longrun
 NAME=$1
 STATE=$(cat ~/.longrun/$NAME.state 2> /dev/null || echo 'not run')
 MARKER=__NOPE__$NAME
-STATUS=xxx
-MSG=xxx
 PROCESS=$(pgrep -fn "$MARKER")
 if [ "$PROCESS" != "" ]
 then

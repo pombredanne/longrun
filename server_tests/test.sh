@@ -16,7 +16,6 @@ fi
 
 if [ "$(~/longrun/bin/longrun.state FAILED)" != "failure" ]
 then
-  echo "x$(~/longrun/bin/longrun.state FAILED)x"
   echo fail error
 fi
 
@@ -33,6 +32,18 @@ fi
 if [ "$(~/longrun/bin/longrun.state NOTRUN)" != "not run" ]
 then
   echo notrun error
+fi
+
+##########################
+
+if ~/longrun/bin/longrun.start RUNNING sleep 10 > /dev/null
+then
+  echo start running error
+fi
+
+if ! ~/longrun/bin/longrun.start NOTRUN true > /dev/null
+then
+  echo start notrun error
 fi
 
 
