@@ -1,13 +1,9 @@
-beforeEach(function(){
-    console.log("nuke!")
-    longrun._nuke_state()
-})
-
 describe("Longrun", function(){
-  longrun.should.be.ok;
+  LongRun.should.be.ok;
 
   describe("register", function(){
     it("has populated data structures correctly", function () {
+      var longrun = new LongRun()
       longrun.register("test", "succ", "fail", "poll");
       longrun.register("again", "ok", "bad", "poke");
       longrun.register.should.be.ok;
@@ -18,21 +14,22 @@ describe("Longrun", function(){
     })
   })
 
-  describe("nuke", function(){
-    it("destroys data structures", function () {
-      longrun._nuke_state();
-      longrun.register.should.be.ok;
-      longrun._names.should.be.empty;
-      longrun._success_functions.should.be.empty;
-      longrun._failure_functions.should.be.empty;
-      longrun._poll_functions.should.be.empty;
-    })
+  it("is classlike", function () {
+    var longrun = new LongRun()
+    var other_longrun = new LongRun()
+    other_longrun.register("a","b","c","d");
+    longrun.register.should.be.ok;
+    longrun._names.should.be.empty;
+    longrun._success_functions.should.be.empty;
+    longrun._failure_functions.should.be.empty;
+    longrun._poll_functions.should.be.empty;
+    other_longrun._names.should.be.eql(["a"]);
   })
 
   describe("get_state", function(){
     it("correctly invokes commands and gets output", sinon.test(function () {
-      var stub_invoke = function(commands){return JSON.stringify({"status": commands[1], "msg": commands[1]})}
-      this.stub(longrun, "_invoke", stub_invoke)
+      var longrun = new LongRun()
+      longrun._invoke = function(commands){return JSON.stringify({"status": commands[1], "msg": commands[1]})}
       var never_run = function(msg) {
 	console.log("never_run: "+msg)
 	never_run.should.not.be.ok;  // you should never run this function

@@ -1,43 +1,45 @@
-var longrun = {};
+LongRun = function() {
 
-longrun._nuke_state = function() {
-    longrun._success_functions = {};
-    longrun._failure_functions = {};
-    longrun._poll_functions = {};
-    longrun._names = [];
-}
+  this._success_functions = {};
+  this._failure_functions = {};
+  this._poll_functions = {};
+  this._names = [];
 
-longrun._nuke_state()
+  var register = function(name, success, failure, poll) {
+    this._success_functions[name] = success;
+    this._failure_functions[name] = failure;
+    this._poll_functions[name] = poll;
+    this._names.push(name)
+  };
 
-longrun.register = function(name, success, failure, poll) {
-    longrun._success_functions[name] = success;
-    longrun._failure_functions[name] = failure;
-    longrun._poll_functions[name] = poll;
-    longrun._names.push(name)
-};
+  var _invoke = function () {window.alert("nope nope nope _invoke")}
 
-longrun._invoke = function () {window.alert("nope nope nope _invoke")}
-
-longrun.get_one_state = function(name) {
-  var raw_state = longrun._invoke(["~/bin/longrun/state", name]);
-  // TODO: make the above async, but keep below not async.
-  var state = $.parseJSON(raw_state);
-  if (state['status'] === 'success') {
-      longrun._success_functions[name](state['msg'])
-  } else if (state['status'] === 'failure') {
-      longrun._failure_functions[name](state['msg'])
-  } else if (state['status'] === 'running') {
-      longrun._poll_functions[name](state['msg'])
-  } else if (state['status'] === 'killed') {
-      longrun._failure_functions[name](state['msg'])
-  } else {
-      console.log("Didn't know what to do with status "+status)
-  }
-}
-
-longrun.get_state = function() {
-    for (var i=0; i<longrun._names.length; i++) {
-        var name = longrun._names[i]
-        longrun.get_one_state(name)
+  var get_one_state = function(name) {
+    var raw_state = this._invoke(["~/bin/this.state", name]);
+    // TODO: make the above async, but keep below not async.
+    var state = $.parseJSON(raw_state);
+    if (state['status'] === 'success') {
+	this._success_functions[name](state['msg'])
+    } else if (state['status'] === 'failure') {
+	this._failure_functions[name](state['msg'])
+    } else if (state['status'] === 'running') {
+	this._poll_functions[name](state['msg'])
+    } else if (state['status'] === 'killed') {
+	this._failure_functions[name](state['msg'])
+    } else {
+	console.log("Didn't know what to do with status "+status)
     }
+  }
+
+  var get_state = function() {
+      for (var i=0; i<this._names.length; i++) {
+	  var name = this._names[i]
+	  this.get_one_state(name)
+      }
+  }
+
+  this.register = register
+  this._invoke = _invoke
+  this.get_one_state = get_one_state
+  this.get_state = get_state
 }
