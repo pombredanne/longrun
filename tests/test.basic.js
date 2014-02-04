@@ -17,15 +17,6 @@ describe("Longrun", function(){
       longrun._failure_functions.should.eql({"test": "fail", "again": "bad"});
       longrun._poll_functions.should.eql({"again": "poke", "test": "poll"});
     })
-
-//    it("takes reasonable defaults", function () {
-//      var longrun = new LongRun()
-//      longrun.register("test", "succ");
-//      longrun._names.should.eql(["test"]);
-//      longrun._success_functions.should.eql({"test": "succ"});
-//      longrun._failure_functions.should.eql({"test": longrun._default_fail});
-//      longrun._poll_functions.should.eql({"test": longrun._poll});
-//    })
   })
 
   it("is classlike", function () {
