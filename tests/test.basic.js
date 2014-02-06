@@ -49,8 +49,6 @@ describe("Longrun", function(){
   describe("get_state", function(){
     it("correctly invokes commands and gets output", sinon.test(function () {
       var longrun = new LongRun()
-      longrun._invoke = function(commands){return JSON.stringify({"status": commands[1], "msg": commands[1]})}
-
       var collect_done = []
       var done = function(name, msg) {
         collect_done.push(msg)
@@ -66,13 +64,12 @@ describe("Longrun", function(){
       longrun.register('running', never_run, never_run, poll);
       longrun.register('killed', never_run, die, never_run);
 
-      longrun._invoke = function (commands) {
+      longrun._invoke = function (commands, success) {
 	// override _invoke for testing
-	return JSON.stringify({"status": commands[1], "msg": commands[1]})
+        success(JSON.stringify({"status": commands[1], "msg": commands[1]}))
       }
 
       longrun.get_state()
-      //collect_done.should.be.eql(['success', 'failure', 'running', 'killed'])
       collect_done.should.be.eql(['success', 'failure', 'running', 'killed'])
     }))
   })
@@ -81,15 +78,15 @@ describe("Longrun", function(){
     it("polls repeatedly", function(){
       var longrun = new LongRun()
       var i = 0
-      var stub_invoke = function(msg){
+      var stub_invoke = function(msg, success){
         i++;
         console.log("Stub_invoke "+i+msg)
         if (i>4) {
             "running many times".should.not.be.ok
         } else if (i===4) {
-            return '{"status":"success", "msg":"ok"}'
+            success('{"status":"success", "msg":"ok"}')
         } else {
-            return '{"status":"running", "msg":"chug"}'
+            success('{"status":"running", "msg":"chug"}')
         }
       }
       longrun._invoke = stub_invoke;
