@@ -6,11 +6,16 @@ var never_run = function(msg) {
 describe("Longrun", function(){
   LongRun.should.be.ok;
 
-  it("runs end to end", function(){
+  it("runs end to end", function(done){
+    this.timeout(5001);
     var longrun = new LongRun();
-    var succ=function(name, msg){console.log("SUCCESS\n"+name+"\n"+msg+"!!")};
-    longrun.register("endtoend",succ, null, longrun._poll);
-    longrun.start("endtoend", "echo 123");
+    var succ=function(name, msg){
+      console.log("SUCCESS\n"+name+"\n"+msg+"!!");
+      done()
+    };
+    var poller = function(name, msg){longrun._poll(name, msg)}
+    longrun.register("endtoend",succ, null, poller);
+    longrun.start("endtoend", "sleep 1");
     longrun.get_one_state("endtoend");
     // TODO spy
 

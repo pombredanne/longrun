@@ -76,7 +76,7 @@ LongRun = function() {
     console.log("_poll:"+name+" "+msg)
     console.log("_poll this"+this)
     var that = this
-    window.setTimeout(function(name){that.get_one_state(name)}, 10000, name)
+    window.setTimeout(function(name){that.get_one_state(name)}, 2000, name)
   }
 
   this.register = register
