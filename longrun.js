@@ -27,15 +27,28 @@ LongRun = function() {
     window.alert("Didn't get response from server :(")
   }
  
-  var _invoke = function (command) {
-    text_command = command.join('')
-    scraperwiki.exec(text_command, _exec_success, _exec_fail)
+  var _invoke = function (command, success) {
+    var text_command = command.join('')
+    scraperwiki.exec(text_command, success, _exec_fail)
   }
+
+  var start = function(name, command) {
+      // TODO: nice escaping of command!
+      var full_command = ["~/bin/longrun.start ", name, " "].concat(command);
+      this._invoke(full_command);
+    };
 
   var get_one_state = function(name) {
     console.log("get_one "+name)
     console.log("get_one_this"+this)
-    var raw_state = this._invoke(["~/bin/longrun.state ", name]);
+
+    var that = this
+    this._invoke(["~/bin/longrun.state ", name], 
+                 function(stdout){that._call_state_function(name, stdout)});
+  };
+
+  var _call_state_function = function(name, raw_state) {
+    console.log("RAW:"+raw_state)
     // TODO: make the above async, but keep below not async.
     var state = $.parseJSON(raw_state);
     if (state['status'] === 'success') {
@@ -71,5 +84,7 @@ LongRun = function() {
   this.get_one_state = get_one_state
   this.get_state = get_state
   this._poll = _poll
+  this.start = start
+  this._call_state_function = _call_state_function
 
 }

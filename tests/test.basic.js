@@ -6,6 +6,16 @@ var never_run = function(msg) {
 describe("Longrun", function(){
   LongRun.should.be.ok;
 
+  it("runs end to end", function(){
+    var longrun = new LongRun();
+    var succ=function(name, msg){console.log("SUCCESS\n"+name+"\n"+msg+"!!")};
+    longrun.register("endtoend",succ, null, longrun._poll);
+    longrun.start("endtoend", "echo 123");
+    longrun.get_one_state("endtoend");
+    // TODO spy
+
+  })
+
   describe("register", function(){
     it("has populated data structures correctly", function () {
       var longrun = new LongRun()

@@ -20,7 +20,7 @@ else
     MSG="unexpectedly died"
   else
     STATUS=$STATE
-    MSG=$(tail -n 30 ~/.longrun/name.log 2> /dev/null)
+    MSG=$(tail -n 30 ~/.longrun/$NAME.log 2> /dev/null)
   fi
 fi
 
