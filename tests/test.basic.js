@@ -6,7 +6,21 @@ var never_run = function(msg) {
 describe("Longrun", function(){
   LongRun.should.be.ok;
 
-  it("runs end to end, even when running lots", function(done){
+  it("runs end to end", function(done){
+    this.timeout(20000);
+    var longrun = new LongRun();
+    var count = 0
+    var succ=function(name, msg){
+      console.log("SUCCESS\n"+name+"\n"+msg+"!!");
+      done();
+    };
+    var poller = function(name, msg){longrun._poll(name, msg)}
+    longrun.register("endtoend1",succ, null, poller);
+    longrun.start("endtoend1", "sleep 1");
+    longrun.get_one_state("endtoend1");
+  })
+
+  it.skip("runs end to end, even when running lots", function(done){
     this.timeout(20000);
     var longrun = new LongRun();
     var count = 0
