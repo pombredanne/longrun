@@ -16,20 +16,16 @@ LongRun = function() {
     this._names.push(name)
   };
 
-  var _exec_success = function(response) {
-    var json_response = $.parseJSON(response)
-    if (json_response['status'] != 'started') {
-      window.alert("Unable to start, already started?\n"+json_response)
-    }
-  }
-
-  var _exec_fail = function(response) {
-    window.alert("Didn't get response from server :(")
-  }
- 
   var _invoke = function (command, success) {
     var text_command = command.join('')
-    scraperwiki.exec(text_command, success, _exec_fail)
+    var _exec_fail = function(command, success, response){
+      console.log("Server unhappy: "+response);
+      window.setTimeout(_invoke, 10000, command, success)
+    }
+
+    scraperwiki.exec(text_command,
+                     success,
+                     function(response){_exec_fail(command, success, response)})
   }
 
   var start = function(name, command) {

@@ -6,17 +6,31 @@ var never_run = function(msg) {
 describe("Longrun", function(){
   LongRun.should.be.ok;
 
-  it("runs end to end", function(done){
-    this.timeout(5001);
+  it("runs end to end, even when running lots", function(done){
+    this.timeout(20000);
     var longrun = new LongRun();
+    var count = 0
     var succ=function(name, msg){
+      count = count + 1;
       console.log("SUCCESS\n"+name+"\n"+msg+"!!");
-      done()
+      if (count == 5) {done()}
     };
     var poller = function(name, msg){longrun._poll(name, msg)}
-    longrun.register("endtoend",succ, null, poller);
-    longrun.start("endtoend", "sleep 1");
-    longrun.get_one_state("endtoend");
+    longrun.register("endtoend1",succ, null, poller);
+    longrun.register("endtoend2",succ, null, poller);
+    longrun.register("endtoend3",succ, null, poller);
+    longrun.register("endtoend4",succ, null, poller);
+    longrun.register("endtoend5",succ, null, poller);
+    longrun.start("endtoend1", "sleep 1");
+    longrun.start("endtoend2", "sleep 1");
+    longrun.start("endtoend3", "sleep 1");
+    longrun.start("endtoend4", "sleep 1");
+    longrun.start("endtoend5", "sleep 1");
+    longrun.get_one_state("endtoend1");
+    longrun.get_one_state("endtoend2");
+    longrun.get_one_state("endtoend3");
+    longrun.get_one_state("endtoend4");
+    longrun.get_one_state("endtoend5");
     // TODO spy
 
   })
