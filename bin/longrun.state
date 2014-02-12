@@ -20,10 +20,12 @@ else
     MSG="unexpectedly died"
   else
     STATUS=$STATE
-    MSG=$(tail -n 30 ~/.longrun/$NAME.log 2> /dev/null)
+    MSG=$(tail -c4096 ~/.longrun/$NAME.log 2> /dev/null)
   fi
 fi
 
-echo -n "{\"status\": \"$STATUS\", \"msg\": \"$MSG\"}"
-# echo $MSG
-# pass STATUS and MSG to python to jsonify
+python << END_TEXT
+import json
+print json.dumps({'status': """$STATUS""",
+                  'msg': """$MSG"""})
+END_TEXT
