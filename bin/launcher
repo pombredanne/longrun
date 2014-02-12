@@ -5,7 +5,7 @@ shift
 # TODO bail if state is running!
 echo -n 'running' > ~/.longrun/$NAME.state
 echo $@ > ~/.longrun/$NAME.args
-$@ > ~/.longrun/$NAME.log
+$@ &> ~/.longrun/$NAME.log
 if [ "$?" == "0" ]
   then
      echo -n 'success' > ~/.longrun/$NAME.state
