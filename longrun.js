@@ -53,18 +53,20 @@ LongRun = function() {
   var _call_state_function = function(name, raw_state) {
     console.log("RAW:"+raw_state)
     // TODO: make the above async, but keep below not async.
+    // TODO: refactor so all success/failure function just take state?
+    //       ... or at least not taking them in reverse order.
     var state = $.parseJSON(raw_state);
     if (state['status'] === 'success') {
 	this._success_functions[name](name, state['msg'])
     } else if (state['status'] === 'failure') {
-	this._failure_functions[name](name, state['msg'])
+	this._failure_functions[name](name, state['msg'], state['status'])
     } else if (state['status'] === 'running') {
 	this._poll_functions[name](name, state['msg'])
         //this._poll(name)
     } else if (state['status'] === 'killed') {
-	this._failure_functions[name](name, state['msg'])
+	this._failure_functions[name](name, state['msg'], state['status'])
     } else if (state['status'] === 'not run') {
-        this._failure_functions[name](name, state['msg'])
+        this._failure_functions[name](name, state['msg'], state['status'])
     } else {
 	console.log("Didn't know what to do with status "+status)
     }
