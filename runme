@@ -1,5 +1,8 @@
-#!/bin/bash -e
+#!/bin/bash
 mkdir -p ~/bin
-ln -s ~/longrun/bin/longrun.state ~/bin/longrun.state || true
-ln -s ~/longrun/bin/launcher ~/bin/launcher || true
-ln -s ~/longrun/bin/longrun.start ~/bin/longrun.start || true
+cd ~/longrun
+ln -s ../longrun/bin/longrun.state ~/bin/longrun.state
+ln -s ../longrun/bin/launcher ~/bin/launcher
+ln -s ../longrun/bin/longrun.start ~/bin/longrun.start
+ln -s ../longrun/longrun.js ~/http
+
