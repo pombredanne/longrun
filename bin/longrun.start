@@ -1,6 +1,5 @@
 #!/bin/bash
 # launch command
-
 mkdir -p ~/.longrun
 NAME=$1
 MARKER=__NOPE__$NAME
@@ -12,6 +11,6 @@ then
   echo -n '{"status": "running", "msg": "already running"}'
   exit 1
 else
-  ~/longrun/bin/launcher $NAME $MARKER $COMMAND &
+  ~/bin/launcher $NAME $MARKER $COMMAND &
   echo -n '{"status": "started"}'
 fi
