@@ -34,6 +34,12 @@ LongRun = function() {
       this._invoke(full_command);
     };
 
+  var start_and_get_state = function(name, command) {
+      var full_command = ["~/bin/longrun.start ", name, " "].concat(command);
+      this._invoke(full_command, function(){this.get_one_state(command)})
+  };
+      
+
   var get_one_state = function(name) {
     console.log("get_one "+name)
     console.log("get_one_this"+this)
@@ -56,6 +62,8 @@ LongRun = function() {
         //this._poll(name)
     } else if (state['status'] === 'killed') {
 	this._failure_functions[name](name, state['msg'])
+    } else if (state['status'] === 'not run') {
+        this._failure_functions[name](name, state['msg'])
     } else {
 	console.log("Didn't know what to do with status "+status)
     }
@@ -69,8 +77,6 @@ LongRun = function() {
   }
 
   var _poll = function(name, msg) {
-    console.log("_poll:"+name+" "+msg)
-    console.log("_poll this"+this)
     var that = this
     window.setTimeout(function(name){that.get_one_state(name)}, 2000, name)
   }
