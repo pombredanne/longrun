@@ -36,7 +36,8 @@ LongRun = function() {
 
   var start_and_get_state = function(name, command) {
       var full_command = ["~/bin/longrun.start ", name, " "].concat(command);
-      this._invoke(full_command, function(){this.get_one_state(command)})
+      var that = this
+      this._invoke(full_command, function(){that.get_one_state(name)})
   };
       
 
@@ -88,5 +89,6 @@ LongRun = function() {
   this._poll = _poll
   this.start = start
   this._call_state_function = _call_state_function
+  this.start_and_get_state = start_and_get_state
 
 }
