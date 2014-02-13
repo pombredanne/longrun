@@ -11,6 +11,6 @@ then
   echo -n '{"status": "running", "msg": "already running"}'
   exit 1
 else
-  ~/bin/launcher $NAME $MARKER $COMMAND &
+  ~/bin/launcher $NAME $MARKER $COMMAND < /dev/null > /dev/null 2> /dev/null &
   echo -n '{"status": "started"}'
 fi
