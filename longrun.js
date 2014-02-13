@@ -81,7 +81,8 @@ LongRun = function() {
 
   var _poll = function(name, msg) {
     var that = this
-    window.setTimeout(function(name){that.get_one_state(name)}, 2000, name)
+    console.log("polling for real: "+name)
+    window.setTimeout(function(name){that.get_one_state(name)}, 10000, name)
   }
 
   this.register = register
